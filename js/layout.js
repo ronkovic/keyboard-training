@@ -39,15 +39,23 @@ export const COLS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const ROW_LABELS = { top: '上段', home: '中段', bottom: '下段' };
 
 export const COL_LABELS = {
-  1: '小指外(L)', 2: '小指(L)', 3: '薬指(L)', 4: '中指(L)', 5: '人差(L)',
-  6: '人差(R)',   7: '中指(R)', 8: '薬指(R)', 9: '小指(R)', 10: '小指外(R)',
+  1:  '小指(L)',
+  2:  '薬指(L)',
+  3:  '中指(L)',
+  4:  '人差し指(L)',
+  5:  '人差し指内(L)',
+  6:  '人差し指内(R)',
+  7:  '人差し指(R)',
+  8:  '中指(R)',
+  9:  '薬指(R)',
+  10: '小指(R)',
 };
 
 export const PRESETS = {
   all:       { rows: ['top','home','bottom'], cols: [1,2,3,4,5,6,7,8,9,10], label: '全て' },
   home:      { rows: ['home'],               cols: [1,2,3,4,5,6,7,8,9,10], label: '中段のみ' },
-  index:     { rows: ['top','home','bottom'], cols: [5, 6],                  label: '人差し指' },
-  homeIndex: { rows: ['home'],               cols: [4, 5, 6, 7],            label: '中段×中央' },
+  index:     { rows: ['top','home','bottom'], cols: [4,5,6,7],               label: '人差し指' },
+  homeRow:   { rows: ['home'],               cols: [4,5,6,7],               label: '中段×人差し指' },
   leftHand:  { rows: ['top','home','bottom'], cols: [1,2,3,4,5],             label: '左手' },
   rightHand: { rows: ['top','home','bottom'], cols: [6,7,8,9,10],            label: '右手' },
 };

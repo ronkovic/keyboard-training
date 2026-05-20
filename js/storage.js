@@ -3,7 +3,7 @@ const LIFETIME_KEY = 'kusamochi-trainer:lifetime';
 
 const DEFAULT_SETTINGS = {
   selectedRows: ['home'],
-  selectedCols: [3, 4, 5, 6, 7, 8],
+  selectedCols: [4, 5, 6, 7],
   length: 20,
   timeLimit: null,
   targetWpm: 30,
