@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kusamochi Keyboard Trainer</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <h1>Kusamochi Keyboard Trainer</h1>
+  </header>
+
+  <!-- ===== スタート画面 ===== -->
+  <section id="screen-start">
+
+    <div class="section-card">
+      <h2>行を選択</h2>
+      <div id="row-toggles"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>列を選択</h2>
+      <div id="col-toggles"></div>
+      <div style="margin-top: 12px;">
+        <div id="preset-buttons"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>キーボードプレビュー</h2>
+      <div id="keyboard-start" class="keyboard"></div>
+    </div>
+
+    <div class="section-card">
+      <h2>難易度</h2>
+      <div class="difficulty-grid">
+        <label>
+          文字数
+          <input type="number" id="setting-length" min="5" max="200" step="5" value="20">
+        </label>
+        <label>
+          時間制限 (秒、空欄=なし)
+          <input type="number" id="setting-timelimit" min="10" max="300" step="10" placeholder="なし">
+        </label>
+        <label>
+          目標 WPM
+          <input type="number" id="setting-wpm" min="1" max="300" value="30">
+        </label>
+        <label>
+          目標 正確率 (%)
+          <input type="number" id="setting-accuracy" min="1" max="100" step="0.5" value="95">
+        </label>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <div id="best-score"></div>
+      <div id="weak-keys-summary"></div>
+    </div>
+
+    <button id="btn-start">START</button>
+  </section>
+
+  <!-- ===== 練習画面 ===== -->
+  <section id="screen-practice" hidden>
+    <div id="timer" hidden></div>
+    <div id="prompt-display"></div>
+    <div id="keyboard-practice" class="keyboard"></div>
+  </section>
+
+  <!-- ===== サマリー画面 ===== -->
+  <section id="screen-summary" hidden>
+    <h2 style="text-align:center; font-size: 1.4rem; color: var(--text);">結果</h2>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">WPM</div>
+        <div>
+          <span id="result-wpm" class="result-value">0</span>
+          <span class="result-unit">wpm</span>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">正確率</div>
+        <div>
+          <span id="result-accuracy" class="result-value">0</span>
+          <span class="result-unit">%</span>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">所要時間</div>
+        <div>
+          <span id="result-time" class="result-value">0</span>
+          <span class="result-unit">s</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="weak-keys-card">
+      <div class="label">このセッションの苦手キー</div>
+      <div id="result-weak"></div>
+    </div>
+
+    <div class="summary-buttons">
+      <button id="btn-retry" class="btn-action btn-primary">もう一度</button>
+      <button id="btn-back" class="btn-action btn-secondary">設定に戻る</button>
+    </div>
+  </section>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
