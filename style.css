@@ -321,19 +321,27 @@ section {
 .btn-primary { background: var(--accent); color: #0a0a14; }
 .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 
-/* キーボード表示トグル */
+/* キーボードプレビューヘッダー */
+.keyboard-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.keyboard-preview-header h2 { margin-bottom: 0; }
+
 #label-show-keyboard {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
   user-select: none;
 }
 #label-show-keyboard input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   accent-color: var(--accent);
   cursor: pointer;
 }
