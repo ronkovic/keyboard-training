@@ -118,6 +118,13 @@ function bindDifficultyControls() {
   bind('setting-timelimit','timeLimit',        v => v ? parseInt(v) : null);
   bind('setting-wpm',      'targetWpm',        v => parseInt(v) || 30);
   bind('setting-accuracy', 'targetAccuracy',   v => parseFloat(v) || 95);
+
+  const kbToggle = document.getElementById('setting-show-keyboard');
+  kbToggle.checked = settings.showKeyboard;
+  kbToggle.addEventListener('change', e => {
+    settings.showKeyboard = e.target.checked;
+    saveSettings(settings);
+  });
 }
 
 function refreshStartKeyboard() {
@@ -156,9 +163,10 @@ function startPractice() {
 
   const kbEl = document.getElementById('keyboard-practice');
   if (!kbEl.hasChildNodes()) buildKeyboard(kbEl);
+  kbEl.hidden = !settings.showKeyboard;
 
   renderPrompt(0, null);
-  updateHighlight(new Set(charset), currentPrompt[0], kbEl);
+  if (settings.showKeyboard) updateHighlight(new Set(charset), currentPrompt[0], kbEl);
 
   if (settings.timeLimit) {
     let timeLeft = settings.timeLimit;
@@ -184,8 +192,10 @@ function startPractice() {
     prompt: currentPrompt,
     onUpdate: ({ idx, lastCorrect, lastChar }) => {
       renderPrompt(idx, lastCorrect);
-      flashKey(lastChar, lastCorrect, kbEl);
-      updateHighlight(targetSet, currentPrompt[idx], kbEl);
+      if (settings.showKeyboard) {
+        flashKey(lastChar, lastCorrect, kbEl);
+        updateHighlight(targetSet, currentPrompt[idx], kbEl);
+      }
     },
     onComplete: sessionStats => {
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }

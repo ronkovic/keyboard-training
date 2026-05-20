@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS = {
   timeLimit: null,
   targetWpm: 30,
   targetAccuracy: 95,
+  showKeyboard: true,
 };
 
 const DEFAULT_LIFETIME = {
