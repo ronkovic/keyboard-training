@@ -14,19 +14,98 @@
   <!-- ===== スタート画面 ===== -->
   <section id="screen-start">
 
+    <!-- モード選択タブ -->
     <div class="section-card">
-      <h2>行を選択</h2>
-      <div id="row-toggles"></div>
+      <h2>練習モード</h2>
+      <div id="mode-tabs"></div>
     </div>
 
-    <div class="section-card">
-      <h2>列を選択</h2>
+    <!-- アルファベットモード専用パネル -->
+    <div id="panel-alpha" class="section-card mode-panel">
+      <h2>行を選択</h2>
+      <div id="row-toggles"></div>
+
+      <h2 style="margin-top:14px;">列を選択</h2>
       <div id="col-toggles"></div>
       <div style="margin-top: 12px;">
         <div id="preset-buttons"></div>
       </div>
     </div>
 
+    <!-- 記号モード専用パネル -->
+    <div id="panel-symbol" class="section-card mode-panel" hidden>
+      <h2>記号カテゴリ</h2>
+      <div class="toggle-group">
+        <label><input type="checkbox" data-cat="brackets"> 括弧 ( ) { } [ ] &lt; &gt;</label>
+        <label><input type="checkbox" data-cat="arithmetic"> 算術 + - = * / % ^</label>
+        <label><input type="checkbox" data-cat="special"> 特殊 ! @ # $ &amp; | \ ~ ` ?</label>
+        <label><input type="checkbox" data-cat="quotes"> その他 " ' : ; _</label>
+      </div>
+    </div>
+
+    <!-- ナビゲーションモード専用パネル -->
+    <div id="panel-nav" class="section-card mode-panel" hidden>
+      <h2>ナビゲーション範囲</h2>
+      <div class="toggle-group">
+        <label>
+          <input type="checkbox" id="setting-nav-all">
+          Home / End / PageUp / PageDown / Delete も含む
+        </label>
+      </div>
+    </div>
+
+    <!-- ショートカットモード専用パネル -->
+    <div id="panel-shortcut" class="section-card mode-panel" hidden>
+      <h2>ショートカットグループ</h2>
+      <div class="toggle-group">
+        <label><input type="checkbox" data-group="edit"> 編集 (Ctrl/Cmd + C/V/X/Z/S)</label>
+      </div>
+    </div>
+
+    <!-- シナリオモード専用パネル -->
+    <div id="panel-scenario" class="section-card mode-panel" hidden>
+      <h2>ジャンル</h2>
+      <select id="setting-scenario-genre" class="select-control">
+        <option value="js">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="git">Git コマンド</option>
+        <option value="html">HTML</option>
+      </select>
+    </div>
+
+    <!-- Dev フローモード専用パネル -->
+    <div id="panel-devflow" class="section-card mode-panel" hidden>
+      <h2>開発フロー</h2>
+      <select id="setting-devflow-genre" class="select-control">
+        <option value="tmux">tmux 操作</option>
+        <option value="nvim">Neovim 操作</option>
+        <option value="combined">tmux + Neovim 統合</option>
+      </select>
+
+      <div class="prefix-config">
+        <h2 style="margin-top:14px;">tmux プレフィックス</h2>
+        <div class="prefix-current-row">
+          <span class="prefix-label">現在:</span>
+          <code id="prefix-current"></code>
+        </div>
+        <div class="prefix-presets">
+          <button class="btn-prefix-preset" data-mods="ctrl" data-key="b">C-b (デフォルト)</button>
+          <button class="btn-prefix-preset" data-mods="ctrl" data-key="a">C-a</button>
+          <button class="btn-prefix-preset" data-mods="ctrl" data-key="space">C-Space</button>
+          <button class="btn-prefix-preset" data-mods="ctrl" data-key="q">C-q</button>
+          <button class="btn-prefix-preset" data-mods="ctrl" data-key="t">C-t</button>
+          <button id="btn-prefix-capture" class="btn-preset">カスタム (キーを押す)</button>
+        </div>
+        <div id="prefix-conflict-warn" class="prefix-warn" hidden></div>
+      </div>
+
+      <div class="devflow-note">
+        <strong>注意:</strong> Ctrl+W / Cmd+W などのブラウザショートカットとプレフィックスが
+        重なると練習できない場合があります。
+      </div>
+    </div>
+
+    <!-- キーボードプレビュー (レイヤー別タブ) -->
     <div class="section-card">
       <div class="keyboard-preview-header">
         <h2>キーボードプレビュー</h2>
@@ -35,14 +114,16 @@
           トレーニング中も表示
         </label>
       </div>
+      <div id="layer-tabs" class="layer-tabs"></div>
       <div id="keyboard-start" class="keyboard"></div>
     </div>
 
+    <!-- 難易度 + 出題戦略 -->
     <div class="section-card">
       <h2>難易度</h2>
       <div class="difficulty-grid">
         <label>
-          文字数
+          文字数 / ステップ数
           <input type="number" id="setting-length" min="5" max="200" step="5" value="20">
         </label>
         <label>
@@ -58,6 +139,16 @@
           <input type="number" id="setting-accuracy" min="1" max="100" step="0.5" value="95">
         </label>
       </div>
+      <div style="margin-top:12px;">
+        <label class="inline-label">
+          出題戦略:
+          <select id="setting-strategy" class="select-control select-inline">
+            <option value="random">ランダム</option>
+            <option value="pair">ペア重視</option>
+            <option value="weak">苦手キー優先</option>
+          </select>
+        </label>
+      </div>
     </div>
 
     <div style="text-align: center;">
@@ -70,28 +161,47 @@
 
   <!-- ===== 練習画面 ===== -->
   <section id="screen-practice" hidden>
+    <div id="context-indicator" class="context-indicator" hidden></div>
     <div id="timer" hidden></div>
-    <div id="prompt-display"></div>
-    <div id="keyboard-practice" class="keyboard"></div>
+
+    <!-- 通常モード: 縦1列 -->
+    <div id="practice-single">
+      <div id="prompt-display"></div>
+      <div id="keyboard-practice" class="keyboard"></div>
+    </div>
+
+    <!-- シナリオ/Devフローモード: 左=ターミナル 右=レイヤー表示 -->
+    <div id="practice-split" hidden>
+      <div id="terminal-pane">
+        <div id="terminal-history"></div>
+        <div id="terminal-prompt"></div>
+      </div>
+      <div id="keyboard-pane">
+        <div id="keyboard-practice-multi"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ===== サマリー画面 ===== -->
   <section id="screen-summary" hidden>
-    <h2 style="text-align:center; font-size: 1.4rem; color: var(--text);">結果</h2>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:4px;">
+      <h2 style="font-size: 1.4rem; color: var(--text);">結果</h2>
+      <span id="result-mode" class="mode-badge"></span>
+    </div>
 
     <div class="result-grid">
       <div class="result-card">
-        <div class="result-label">WPM</div>
+        <div class="result-label">スコア</div>
         <div>
           <span id="result-wpm" class="result-value">0</span>
-          <span class="result-unit">wpm</span>
+          <span id="result-wpm-unit" class="result-unit">wpm</span>
         </div>
       </div>
       <div class="result-card">
-        <div class="result-label">正確率</div>
+        <div class="result-label">精度</div>
         <div>
           <span id="result-accuracy" class="result-value">0</span>
-          <span class="result-unit">%</span>
+          <span id="result-acc-unit" class="result-unit">%</span>
         </div>
       </div>
       <div class="result-card">
@@ -113,6 +223,15 @@
       <button id="btn-back" class="btn-action btn-secondary">設定に戻る</button>
     </div>
   </section>
+
+  <!-- tmux プレフィックスキャプチャ オーバーレイ -->
+  <div id="prefix-capture-overlay" class="overlay" hidden>
+    <div class="overlay-card">
+      <p>キーを押してください</p>
+      <p class="overlay-sub">押したキー組み合わせがプレフィックスになります</p>
+      <button class="btn-cancel btn-action btn-secondary">キャンセル</button>
+    </div>
+  </div>
 
   <script type="module" src="./js/app.js"></script>
 </body>
