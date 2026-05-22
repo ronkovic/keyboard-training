@@ -37,7 +37,8 @@ export class Trainer {
 
   _onKeyDown(e) {
     if (this.idx >= this.prompt.length) return;
-    // 修飾キー単独押しは無視
+    // IME 変換中、修飾キー単独押し、Process キーは無視
+    if (e.isComposing || e.key === 'Process') return;
     if (['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return;
 
     if (this.isDevflow) {
@@ -83,6 +84,10 @@ export class Trainer {
   _handleDevflow(e) {
     const step = this.prompt[this.idx];
     const seqItem = step.sequence[this.subIdx];
+
+    // レイヤー切替キーが期待キーと一致しない場合は無視 (sequential と同じ処理)
+    if (this.layerSwitchKeys.includes(e.key) && !matchItem(seqItem, e)) return;
+
     const correct = matchItem(seqItem, e);
 
     e.preventDefault();

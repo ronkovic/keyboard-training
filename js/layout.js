@@ -287,7 +287,7 @@ export const LAYER_SWITCH_KEYS = {
   nav:      ['Tab'],
   number:   ["'"],          // L_TMUX + L_SYM 同時だが ' はブラウザに届く
   scenario: [' ', 'Backspace', "'", 'Tab'],
-  devflow:  [],             // ファームウェアが Ctrl+Q を自動送出するため不要
+  devflow:  [' ', 'Backspace', "'"],  // L1/L3 アクティベータを無視 (Ctrl+Q はファームウェアが送出)
   shortcut: [],
   alpha:    [],
 };

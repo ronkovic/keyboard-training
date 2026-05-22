@@ -23,9 +23,9 @@ export function buildTmuxStep(keyChar, prefix) {
     display: keyChar,
     expectKey: keyChar,
     expectMods: [],
-    physicalKey: keyChar,
+    physicalKey: tmuxKeyToPhys(keyChar),  // 物理キー位置 (送出文字と異なる場合あり)
     category: 'alpha',
-    layer: 3,  // TMUX キーボードでハイライト
+    layer: 3,
   };
   return {
     display: `prefix → ${keyChar}`,
@@ -325,6 +325,23 @@ export function pickDevflowSteps(genre, count, prefix) {
 function formatMod({ mods, key }) {
   const labels = { ctrl: 'Ctrl', meta: 'Cmd', alt: 'Alt', shift: 'Shift' };
   return [...mods.map(m => labels[m] || m), key.toUpperCase()].join('+');
+}
+
+// keymap.c L_TMUX: 送出文字 → Layer 0 物理キー位置
+// 一致しないもの (V→|, B→-, N→r, bspc→w, Q→1 など) を列挙
+const TMUX_KEY_PHYS = {
+  // 上段: ウィンドウ番号 (Q-T=1-5, Y-P=6-0)
+  '1':'q','2':'w','3':'e','4':'r','5':'t',
+  '6':'y','7':'u','8':'i','9':'o','0':'p',
+  // 下段左: C=new, V=sp→(|), B=sp↓(-)
+  '|':'v', '-':'b',
+  // 下段右: N=rld(r), M=zoom(m), bspc=fzf-w(w)
+  'r':'n', 'w':'bspc',
+  // それ以外は同じ (a=a, s=s, d=d, f=f, h=h, j=j, k=k, l=l, c=c, m=m, [=[)
+};
+
+function tmuxKeyToPhys(keyChar) {
+  return TMUX_KEY_PHYS[keyChar] ?? keyChar;
 }
 
 function modsToHrmKey(mods) {
